@@ -2,20 +2,20 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { generateQrDataUrl } from "@/lib/qr";
-import { isWalletConfigured } from "@/lib/wallet";
+import { brandStyle } from "@/lib/theme";
 import ProgressBar from "@/components/ProgressBar";
-import AddToWalletButton from "@/components/AddToWalletButton";
+import WalletButtons from "@/components/WalletButtons";
 import type { CustomerStats } from "@/types/database";
 
-// Siempre datos frescos (visitas se actualizan desde /admin).
+// Siempre datos frescos (visitas se actualizan desde el panel del negocio).
 export const dynamic = "force-dynamic";
 
 export default async function CardPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string; id: string }>;
 }) {
-  const { id } = await params;
+  const { slug, id } = await params;
 
   const supabase = createAdminClient();
   const { data, error } = await supabase
@@ -24,19 +24,23 @@ export default async function CardPage({
     .eq("id", id)
     .single<CustomerStats>();
 
-  if (error || !data) notFound();
+  // La tarjeta no existe, o el link no corresponde a este negocio.
+  if (error || !data || data.business_slug !== slug) notFound();
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
-  const qrDataUrl = await generateQrDataUrl(`${appUrl}/card/${data.id}`);
+  const qrDataUrl = await generateQrDataUrl(`${appUrl}/${slug}/card/${data.id}`);
   const hasReward = data.available_rewards > 0;
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-5 py-10">
+    <main
+      className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-5 py-10"
+      style={brandStyle(data.primary_color)}
+    >
       <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg">
         {/* Encabezado */}
-        <div className="bg-slate-900 px-6 py-5 text-white">
-          <p className="text-xs uppercase tracking-widest text-slate-400">
-            Miembro #{data.member_no}
+        <div className="bg-[var(--brand)] px-6 py-5 text-white">
+          <p className="text-xs uppercase tracking-widest text-white/70">
+            {data.business_name} · Miembro #{data.member_no}
           </p>
           <h1 className="mt-1 text-2xl font-bold">
             {data.first_name} {data.last_name}
@@ -99,8 +103,8 @@ export default async function CardPage({
             </p>
           </div>
 
-          {/* Apple Wallet */}
-          {isWalletConfigured() && <AddToWalletButton customerId={data.id} />}
+          {/* Apple / Google Wallet */}
+          <WalletButtons customerId={data.id} />
         </div>
       </div>
     </main>

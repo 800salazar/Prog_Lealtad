@@ -4,9 +4,6 @@
 // La fuente de verdad sigue siendo la vista `customer_stats`; estas
 // utilidades solo sirven para recalcular en el cliente si hace falta.
 
-/** Slug temporal usado mientras no existe el onboarding real (módulo B4). */
-export const DEFAULT_BUSINESS_SLUG = "demo";
-
 export function computeProgress(totalVisits: number, visitsRequired: number) {
   const visitsInCycle = totalVisits % visitsRequired;
   const visitsToReward = (visitsRequired - visitsInCycle) % visitsRequired;

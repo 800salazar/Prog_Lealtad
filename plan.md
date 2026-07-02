@@ -2,7 +2,9 @@ Updated todo list
 
 # Análisis y plan hacia el MVP Pro
 
-> **Progreso**: ✅ **B1 completado** (2026-07-01) — esquema multi-tenant (`businesses`, `business_users`, `business_id` en `customers`/`visits`/`rewards`/`locations`), trigger de premio configurable por negocio (3–20 visitas), vista `customer_stats` con `visits_required`/`reward_label` por negocio, RLS por tenant. App actualizada para leer la config dinámica (ya no hay `VISITS_PER_REWARD`/`REWARD_LABEL` fijos). Pendiente: correr `supabase/schema.sql` en el proyecto Supabase y pegar el `SUPABASE_SERVICE_ROLE_KEY` en `.env.local`.
+> **Progreso**: ✅ **B1 completado** (2026-07-01) — esquema multi-tenant (`businesses`, `business_users`, `business_id` en `customers`/`visits`/`rewards`/`locations`), trigger de premio configurable por negocio (3–20 visitas), vista `customer_stats` con `visits_required`/`reward_label` por negocio, RLS por tenant. App actualizada para leer la config dinámica (ya no hay `VISITS_PER_REWARD`/`REWARD_LABEL` fijos).
+>
+> ✅ **Rutas por negocio + theming de color (parte de B4/B6)** (2026-07-01) — `/[slug]` (registro auto-detectado por negocio, encabezado y botón con `primary_color`), `/[slug]/login` (login del cliente solo con teléfono, sin contraseña), `/[slug]/card/[id]` (tarjeta, validada contra el slug). Slugs reservados protegidos por CHECK en BD + lista compartida en `src/lib/business.ts`. Botones Apple/Google Wallet unificados en `WalletButtons` (Google queda oculto hasta B12). Pendiente: correr `supabase/schema.sql` actualizado en Supabase, pegar `SUPABASE_SERVICE_ROLE_KEY` real en `.env.local`, y construir el dashboard donde el negocio elige su color (hoy se setea por SQL manual).
 
 ## Dónde estás hoy
 

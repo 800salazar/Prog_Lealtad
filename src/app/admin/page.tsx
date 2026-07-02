@@ -94,7 +94,7 @@ export default async function AdminPage({
                 <p className="text-sm text-slate-500">{customer.phone}</p>
               </div>
               <Link
-                href={`/card/${customer.id}`}
+                href={`/${customer.business_slug}/card/${customer.id}`}
                 className="text-sm text-slate-600 underline"
                 target="_blank"
               >

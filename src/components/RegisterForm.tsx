@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { registerCustomer, type RegisterState } from "@/app/actions";
+import { registerCustomer, type RegisterState } from "@/app/[slug]/actions";
 
 const initialState: RegisterState = { error: null };
 
@@ -12,15 +12,16 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:bg-slate-700 disabled:opacity-60"
+      className="w-full rounded-xl bg-[var(--brand)] px-4 py-3 font-semibold text-white transition hover:brightness-90 disabled:opacity-60"
     >
       {pending ? "Creando tu tarjeta…" : "Crear mi tarjeta"}
     </button>
   );
 }
 
-export default function RegisterForm() {
-  const [state, formAction] = useActionState(registerCustomer, initialState);
+export default function RegisterForm({ slug }: { slug: string }) {
+  const boundAction = registerCustomer.bind(null, slug);
+  const [state, formAction] = useActionState(boundAction, initialState);
 
   return (
     <form action={formAction} className="space-y-4">

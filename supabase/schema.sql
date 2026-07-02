@@ -309,3 +309,20 @@ where b.slug = 'demo'
   and not exists (
     select 1 from public.locations l where l.business_id = b.id
   );
+
+-- =============================================================================
+--  11. VALIDACIÓN DE SLUG
+--  El slug se usa en la URL pública: empresa.com/<slug>. Debe ser solo
+--  minúsculas/números/guiones y no puede chocar con rutas propias de la app.
+-- =============================================================================
+alter table public.businesses drop constraint if exists businesses_slug_format;
+alter table public.businesses add constraint businesses_slug_format
+  check (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$');
+
+alter table public.businesses drop constraint if exists businesses_slug_not_reserved;
+alter table public.businesses add constraint businesses_slug_not_reserved
+  check (slug not in (
+    'admin','api','card','login','logout','dashboard','b','app',
+    'www','assets','static','public','favicon.ico','robots.txt',
+    'sitemap.xml','_next','wallet','signup','signin','register'
+  ));

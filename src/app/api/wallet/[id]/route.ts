@@ -35,7 +35,7 @@ export async function GET(
   try {
     const buffer = await buildPkPass({
       stats: data,
-      qrMessage: `${appUrl}/card/${data.id}`,
+      qrMessage: `${appUrl}/${data.business_slug}/card/${data.id}`,
     });
 
     return new NextResponse(buffer as unknown as BodyInit, {
