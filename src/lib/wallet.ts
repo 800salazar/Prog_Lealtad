@@ -2,7 +2,6 @@ import { PKPass } from "passkit-generator";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { solidPng } from "./png";
-import { VISITS_PER_REWARD, REWARD_LABEL } from "./rewards";
 import type { CustomerStats } from "@/types/database";
 
 /**
@@ -125,20 +124,20 @@ export async function buildPkPass({
 
   pass.secondaryFields.push({
     key: "rewards",
-    label: REWARD_LABEL.toUpperCase(),
+    label: stats.reward_label.toUpperCase(),
     value: String(stats.available_rewards),
   });
 
   pass.auxiliaryFields.push({
     key: "progress",
     label: "PROGRESO",
-    value: `${stats.visits_in_cycle}/${VISITS_PER_REWARD}`,
+    value: `${stats.visits_in_cycle}/${stats.visits_required}`,
   });
 
   pass.backFields.push({
     key: "info",
     label: "Cómo funciona",
-    value: `Acumula ${VISITS_PER_REWARD} visitas y obtén una ${REWARD_LABEL.toLowerCase()}.`,
+    value: `Acumula ${stats.visits_required} visitas y obtén una ${stats.reward_label.toLowerCase()}.`,
   });
 
   pass.setBarcodes({

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { addVisit, redeemReward, logoutAdmin } from "@/app/admin/actions";
-import { VISITS_PER_REWARD, REWARD_LABEL } from "@/lib/rewards";
 import type { CustomerStats, Visit, Reward } from "@/types/database";
 
 export const dynamic = "force-dynamic";
@@ -107,10 +106,10 @@ export default async function AdminPage({
               <Metric label="Visitas" value={customer.total_visits} />
               <Metric
                 label="Ciclo"
-                value={`${customer.visits_in_cycle}/${VISITS_PER_REWARD}`}
+                value={`${customer.visits_in_cycle}/${customer.visits_required}`}
               />
               <Metric
-                label={REWARD_LABEL}
+                label={customer.reward_label}
                 value={customer.available_rewards}
                 highlight={customer.available_rewards > 0}
               />
@@ -140,7 +139,7 @@ export default async function AdminPage({
                   >
                     <div>
                       <p className="font-medium text-slate-800">
-                        {REWARD_LABEL}
+                        {customer.reward_label}
                       </p>
                       <p className="text-xs text-slate-500">
                         {reward.status === "available"

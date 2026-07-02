@@ -1,6 +1,5 @@
 import Link from "next/link";
 import RegisterForm from "@/components/RegisterForm";
-import { VISITS_PER_REWARD, REWARD_LABEL } from "@/lib/rewards";
 
 export default function HomePage() {
   return (
@@ -10,8 +9,7 @@ export default function HomePage() {
           Únete al programa de lealtad
         </h1>
         <p className="mt-2 text-slate-600">
-          Acumula {VISITS_PER_REWARD} visitas y gana una{" "}
-          {REWARD_LABEL.toLowerCase()}. 🥤
+          Acumula visitas y gana tu recompensa. 🥤
         </p>
       </div>
 

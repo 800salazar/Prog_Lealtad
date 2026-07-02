@@ -3,7 +3,6 @@ import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { generateQrDataUrl } from "@/lib/qr";
 import { isWalletConfigured } from "@/lib/wallet";
-import { VISITS_PER_REWARD, REWARD_LABEL } from "@/lib/rewards";
 import ProgressBar from "@/components/ProgressBar";
 import AddToWalletButton from "@/components/AddToWalletButton";
 import type { CustomerStats } from "@/types/database";
@@ -49,7 +48,7 @@ export default async function CardPage({
           <div className="grid grid-cols-2 gap-3">
             <Stat label="Visitas acumuladas" value={data.total_visits} />
             <Stat
-              label={REWARD_LABEL}
+              label={data.reward_label}
               value={data.available_rewards}
               highlight={hasReward}
             />
@@ -59,7 +58,7 @@ export default async function CardPage({
           {hasReward && (
             <div className="rounded-xl bg-emerald-50 px-4 py-3 text-center text-emerald-800">
               🎉 ¡Tienes {data.available_rewards}{" "}
-              {REWARD_LABEL.toLowerCase()}
+              {data.reward_label.toLowerCase()}
               {data.available_rewards > 1 ? "s" : ""} para canjear!
             </div>
           )}
@@ -69,15 +68,18 @@ export default async function CardPage({
             <div className="mb-2 flex items-center justify-between text-sm text-slate-600">
               <span>Progreso al siguiente premio</span>
               <span className="font-medium">
-                {data.visits_in_cycle}/{VISITS_PER_REWARD}
+                {data.visits_in_cycle}/{data.visits_required}
               </span>
             </div>
-            <ProgressBar visitsInCycle={data.visits_in_cycle} />
+            <ProgressBar
+              visitsInCycle={data.visits_in_cycle}
+              visitsRequired={data.visits_required}
+            />
             {data.visits_to_reward > 0 && (
               <p className="mt-2 text-center text-sm text-slate-500">
                 Te faltan {data.visits_to_reward} visita
                 {data.visits_to_reward > 1 ? "s" : ""} para tu próxima{" "}
-                {REWARD_LABEL.toLowerCase()}.
+                {data.reward_label.toLowerCase()}.
               </p>
             )}
           </div>

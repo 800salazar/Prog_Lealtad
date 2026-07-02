@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { DEFAULT_BUSINESS_SLUG } from "@/lib/rewards";
 
 export type RegisterState = { error: string | null };
 
@@ -34,9 +35,22 @@ export async function registerCustomer(
 
   const supabase = createAdminClient();
 
+  // TODO(B4): resolver el negocio por slug de la ruta (/b/[slug]) en vez de
+  // usar siempre el negocio de demostración creado por el seed del schema.
+  const { data: business, error: businessError } = await supabase
+    .from("businesses")
+    .select("id")
+    .eq("slug", DEFAULT_BUSINESS_SLUG)
+    .single();
+
+  if (businessError || !business) {
+    return { error: "No se encontró el negocio. Verifica la configuración." };
+  }
+
   const { data, error } = await supabase
     .from("customers")
     .insert({
+      business_id: business.id,
       first_name: firstName,
       last_name: lastName,
       phone,

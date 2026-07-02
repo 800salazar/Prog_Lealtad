@@ -1,13 +1,17 @@
-import { VISITS_PER_REWARD } from "@/lib/rewards";
-
-/** Muestra el progreso del ciclo actual como puntos + barra. */
-export default function ProgressBar({ visitsInCycle }: { visitsInCycle: number }) {
-  const pct = (visitsInCycle / VISITS_PER_REWARD) * 100;
+/** Muestra el progreso del ciclo actual como puntos + barra (tipo tarjeta perforada). */
+export default function ProgressBar({
+  visitsInCycle,
+  visitsRequired,
+}: {
+  visitsInCycle: number;
+  visitsRequired: number;
+}) {
+  const pct = (visitsInCycle / visitsRequired) * 100;
 
   return (
     <div>
       <div className="mb-3 flex flex-wrap gap-2">
-        {Array.from({ length: VISITS_PER_REWARD }).map((_, i) => (
+        {Array.from({ length: visitsRequired }).map((_, i) => (
           <span
             key={i}
             className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${
